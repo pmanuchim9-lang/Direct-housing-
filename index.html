@@ -185,11 +185,18 @@ function copyAcct(){navigator.clipboard.writeText("3006692047").then(()=>{let m=
 
 async function uploadFile(file, bucket){
 if(!file) return "";
+const useBucket = 'listings';
 let name = Date.now()+"_"+Math.random().toString(36).substring(2)+"_"+file.name.replace(/\s+/g,'_');
-let {error} = await supabaseClient.storage.from(bucket).upload(name, file);
-if(error){ console.log(bucket+" upload error", error); return ""; }
-let {data} = supabaseClient.storage.from(bucket).getPublicUrl(name);
-return data.publicUrl;
+try{
+let {data, error} = await supabaseClient.storage.from(useBucket).upload(name, file, {cacheControl:'3600', upsert:false});
+if(error){ console.log(useBucket+" upload error", error); document.getElementById('submitMsg').innerText="❌ Upload error: "+error.message; return ""; }
+let {data: urlData} = supabaseClient.storage.from(useBucket).getPublicUrl(name);
+return urlData.publicUrl;
+}catch(e){
+console.log("fetch error", e);
+document.getElementById('submitMsg').innerText="❌ Network error: "+e.message;
+return "";
+}
 }
 
 async function submitProperty(){
