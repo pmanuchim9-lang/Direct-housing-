@@ -1,144 +1,168 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Direct PH</title>
+<title>Direct PH - Direct to Landlord</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-body{margin:0;background:#F5F5F0;font-family:Arial}
-.top{background:#0A1931;color:#fff;padding:12px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:99}
-.tab{padding:10px 18px;border-radius:20px;border:none;font-weight:bold;cursor:pointer;margin-left:6px}
-.active{background:#FFCC00;color:#0A1931}
-.inactive{background:#333;color:#fff}
-.hero{background:#0A1931;color:#fff;padding:20px;text-align:center}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px}
-@media(max-width:600px){.grid{grid-template-columns:1fr}}
-.card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+*{box-sizing:border-box} body{margin:0;background:#F5F5F0;font-family:Arial,sans-serif}
+.top{background:#0A1931;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:99}
+.tab{padding:10px 18px;border-radius:20px;border:none;font-weight:800;cursor:pointer;margin-left:6px}
+.active{background:#FFCC00;color:#0A1931} .inactive{background:#333;color:#fff}
+.hero{background:#0A1931;color:#fff;padding:24px;text-align:center}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px} @media(max-width:700px){.grid{grid-template-columns:1fr}}
+.card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.08)}
 .card img{width:100%;height:200px;object-fit:cover;background:#ddd}
-.card_body{padding:10px}
-.formbox{max-width:500px;margin:10px auto;background:#fff;padding:16px;border-radius:12px}
-.input{width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;margin-top:10px;box-sizing:border-box}
-.btn{width:100%;padding:14px;border:none;border-radius:10px;font-weight:bold;margin-top:12px;cursor:pointer;background:#FFCC00;color:#0A1931}
-.hidden{display:none!important}
+.card_body{padding:12px} .card_body b{font-size:15px}
+.formbox{max-width:520px;margin:20px auto;background:#fff;padding:18px;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,0.06)}
+.input{width:100%;padding:12px;border:1px solid #ccc;border-radius:10px;margin-top:12px;font-size:14px}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-weight:800;margin-top:14px;cursor:pointer;background:#FFCC00;color:#0A1931;font-size:15px}
+.badge{display:inline-block;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:800;background:#e8f5e9;color:#2e7d32}
+.small{font-size:12px;color:#666;text-align:center;margin-top:8px}
 </style>
 </head>
 <body>
 
 <div class="top">
-<div>🏠 <b>HOUSE <span style="color:#FFCC00">DIRECT</span> PH</b></div>
+<div>🏠 HOUSE <span style="color:#FFCC00">DIRECT</span> PH</div>
 <div>
-<button id="btnT" class="tab active" onclick="openTenant()">Tenants</button>
-<button id="btnL" class="tab inactive" onclick="openLandlord()">Landlords</button>
+<button id="btnT" class="tab active" onclick="showTenant()">Tenants</button>
+<button id="btnL" class="tab inactive" onclick="showLandlord()">Landlords</button>
 </div>
 </div>
 
 <div id="page-tenant">
-<div class="hero"><h2 style="margin:0">Find House Direct — No Agent</h2><p>Call Landlord Direct</p></div>
+<div class="hero"><h2 style="margin:0">Find House Direct — No Agent Fee</h2><p style="opacity:0.8;margin:6px 0 0">Call & WhatsApp Landlord Direct</p></div>
 <div class="grid" id="houseGrid">Loading houses...</div>
 </div>
 
-<div id="page-landlord" class="hidden">
+<div id="page-landlord" style="display:none">
 <div class="formbox">
-<h3 style="text-align:center;margin:0">List Your House — Pay ₦5000</h3>
-<p style="text-align:center;font-size:13px">Pay to: 803598... then put ref</p>
+<h3 style="text-align:center;margin:0 0 6px">List Your House — Pay ₦5000</h3>
+<div class="small">Opay: 803598... / Moniepoint: ... Put ref after pay</div>
 <input class="input" id="l_title" placeholder="Title e.g 2 Bedroom Rumokoro">
 <input class="input" id="l_location" placeholder="Location e.g Rumuola">
 <input class="input" id="l_price" type="number" placeholder="Price e.g 500000">
-<input class="input" id="l_phone" placeholder="WhatsApp Number e.g 080...">
+<input class="input" id="l_phone" placeholder="WhatsApp Number e.g 08035980000">
 <input class="input" id="l_type" placeholder="Type e.g 2 Bedroom">
-<textarea class="input" id="l_desc" placeholder="Description"></textarea>
-<label class="input">Photo 1 (Must) <input type="file" id="f1" accept="image/*"></label>
+<textarea class="input" id="l_desc" placeholder="Description - water, light, etc"></textarea>
+<label class="input">Photo 1 * (Main) <input type="file" id="f1" accept="image/*"></label>
 <label class="input">Photo 2 <input type="file" id="f2" accept="image/*"></label>
+<label class="input">Video (optional) <input type="file" id="f3" accept="video/*"></label>
 <label class="input">Payment Proof <input type="file" id="fpay" accept="image/*"></label>
 <input class="input" id="l_ref" placeholder="Payment Ref e.g Manuchim 5000">
 <button class="btn" id="submitBtn" onclick="submitHouse()">✅ SUBMIT FOR VERIFICATION</button>
-<div id="msg" style="text-align:center;margin-top:12px;font-weight:bold"></div>
+<div id="msg" style="text-align:center;margin-top:14px;font-weight:800"></div>
 </div>
 </div>
 
 <script>
+// ==== REPLACE ONLY THIS KEY ====
 const SUPA_URL = 'https://wwjdtorasiqkdtvdsfms.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind3amR0b3Jhc2lxa2R0dmRzZm1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MDg0NjQsImV4cCI6MjEwODA4NDQ2NH0.0a6d2p4x904PCPEtuLFSrStUQBR2G8HVM_cHwotTTB0';
-const supaClient = supabase.createClient(SUPA_URL, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind3amR0b3Jhc2lxa2R0dmRzZm1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MDg0NjQsImV4cCI6MjEwODA4NDQ2NH0.0a6d2p4x904PCPEtuLFSrStUQBR2G8HVM_cHwotTTB0');
+const SUPA_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind3amR0b3Jhc2lxa2R0dmRzZm1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MDg0NjQsImV4cCI6MjEwODA4NDQ2NH0.0a6d2p4x904PCPEtuLFSrStUQBR2G8HVM_cHwotTTB0';
+// Go supabase.com > Settings (gear) > API > copy anon public key and paste above
+// ===============================
 
-function openTenant(){
- document.getElementById('page-tenant').classList.remove('hidden');
- document.getElementById('page-landlord').classList.add('hidden');
+function showTenant(){
+ document.getElementById('page-tenant').style.display='block';
+ document.getElementById('page-landlord').style.display='none';
  document.getElementById('btnT').className='tab active';
  document.getElementById('btnL').className='tab inactive';
  loadHouses();
 }
-function openLandlord(){
- document.getElementById('page-landlord').classList.remove('hidden');
- document.getElementById('page-tenant').classList.add('hidden');
+function showLandlord(){
+ document.getElementById('page-landlord').style.display='block';
+ document.getElementById('page-tenant').style.display='none';
  document.getElementById('btnL').className='tab active';
  document.getElementById('btnT').className='tab inactive';
 }
 
-let supa;
-try{ supa = supabase.createClient(SUPA_URL, SUPA_KEY); }catch(e){ supa = null; }
-async function getSupa(){
- if(supa) return supa;
- try{
-  const k = SUPA_KEY.includes('REPLACE') ? null : SUPA_KEY;
-  if(k){ supa = supabase.createClient(SUPA_URL,k); return supa; }
- }catch(e){}
- return null;
+function getClient(){
+ if(SUPA_ANON_KEY.includes('PASTE_YOUR')){ return null; }
+ try{ return supabase.createClient(SUPA_URL, SUPA_ANON_KEY); }catch(e){ return null; }
 }
 
-function demoHouses(){
- const grid=document.getElementById('houseGrid');
- grid.innerHTML=`
- <div class="card"><img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2"><div class="card_body"><b>2 Bedroom Rumokoro</b><br>PH - ₦500k<br><a href="tel:08035980000">Call Landlord</a></div></div>
- <div class="card"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9"><div class="card_body"><b>Self Con Rumuola</b><br>PH - ₦300k<br><a href="tel:08035980000">Call Landlord</a></div></div>
- `;
+function compressImage(file){
+ return new Promise(resolve=>{
+  if(!file){ resolve(null); return; }
+  if(file.size < 900000){ resolve(file); return; }
+  const img = new Image(); img.src = URL.createObjectURL(file);
+  img.onload = ()=>{
+   const canvas = document.createElement('canvas');
+   const max = 1000; let w=img.width, h=img.height;
+   if(w>h){ if(w>max){ h*=max/w; w=max; } } else { if(h>max){ w*=max/h; h=max; } }
+   canvas.width=w; canvas.height=h;
+   canvas.getContext('2d').drawImage(img,0,0,w,h);
+   canvas.toBlob(b=>{ resolve(new File([b], file.name, {type:'image/jpeg'})); }, 'image/jpeg', 0.6);
+  };
+  img.onerror = ()=> resolve(file);
+ });
+}
+
+async function safeUpload(client, file, bucket){
+ if(!file) return null;
+ try{
+  const name = Date.now()+'_'+file.name.replace(/[^a-z0-9.]/gi,'_');
+  const {error} = await client.storage.from(bucket).upload(name, file);
+  if(error) throw error;
+  const {data} = client.storage.from(bucket).getPublicUrl(name);
+  return data.publicUrl;
+ }catch(e){ console.log('upload fail', bucket, e.message); return null; }
 }
 
 async function loadHouses(){
- const grid=document.getElementById('houseGrid');
- grid.innerHTML='Loading...';
- demoHouses();
+ const grid = document.getElementById('houseGrid');
+ grid.innerHTML = 'Loading...';
+ // demo if no supabase yet
+ const demo = `<div class="card"><img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2"><div class="card_body"><b>2 Bedroom Rumokoro</b><br>PH • ₦500k<br><span class="badge">Verified</span></div></div>
+ <div class="card"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9"><div class="card_body"><b>Self Con Rumuola</b><br>PH • ₦300k<br><span class="badge">Verified</span></div></div>`;
  try{
-  const client = await getSupa();
-  if(!client){ return; }
-  const {data} = await client.from('houses').select('*').order('created_at',{ascending:false}).limit(20);
-  if(data && data.length>0){
-   grid.innerHTML='';
-   data.forEach(h=>{
-    grid.innerHTML+=`<div class="card"><img src="${h.image_url||'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2'}"><div class="card_body"><b>${h.title||'House'}</b><br>${h.location||'PH'} - ₦${h.price||''}<br><a href="tel:${h.phone||h.whatsapp||''}">Call</a> | <a href="https://wa.me/${h.whatsapp||h.phone||''}">WhatsApp</a></div></div>`;
-   });
-  }
- }catch(e){ console.log(e); }
+  const client = getClient();
+  if(!client){ grid.innerHTML = demo; return; }
+  const {data, error} = await client.from('houses').select('*').order('created_at',{ascending:false}).limit(20);
+  if(error || !data || data.length===0){ grid.innerHTML = demo; return; }
+  grid.innerHTML = '';
+  data.forEach(h=>{
+   grid.innerHTML += `<div class="card"><img src="${h.image_url||'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2'}"><div class="card_body"><b>${h.title||'House'}</b><br>${h.location||'PH'} • ₦${h.price||''}<br><a href="tel:${h.phone||h.whatsapp||''}">Call</a> | <a href="https://wa.me/${(h.whatsapp||h.phone||'').replace(/[^0-9]/g,'')}">WhatsApp</a> <span class="badge">${h.status||'pending'}</span></div></div>`;
+  });
+ }catch(e){ grid.innerHTML = demo; }
 }
 
 async function submitHouse(){
- const btn=document.getElementById('submitBtn');
- const msg=document.getElementById('msg');
- const f1=document.getElementById('f1').files[0];
+ const btn = document.getElementById('submitBtn'); const msg = document.getElementById('msg');
+ const f1 = document.getElementById('f1').files[0];
  if(!f1){ msg.style.color='red'; msg.innerText='Please add Photo 1'; return; }
- if(!document.getElementById('l_phone').value){ msg.style.color='red'; msg.innerText='Add phone number'; return; }
- btn.innerText='Uploading... wait';
- btn.disabled=true;
- msg.style.color='black'; msg.innerText='Uploading please wait...';
+ if(!document.getElementById('l_phone').value){ msg.style.color='red'; msg.innerText='Add WhatsApp Number'; return; }
+ const client = getClient();
+ if(!client){ msg.style.color='red'; msg.innerHTML='⚠️ You never paste your Supabase anon key for code.<br>Go Supabase > Settings > API > copy anon key > paste for SUPA_ANON_KEY for top of code.'; return; }
+ btn.disabled=true; btn.innerText='Compressing & Uploading... 20sec wait'; msg.style.color='#0A1931'; msg.innerText='Please wait... uploading...';
  try{
-  const client = await getSupa();
-  if(!client) throw new Error('Supabase key not set - Go to Supabase Settings > API > copy anon key and replace in code');
-  const name = Date.now()+'_'+f1.name.replace(/[^a-z0-9.]/gi,'_');
-  let url1 = null;
-  const up = await client.storage.from('house-images').upload(name,f1);
-  if(up.error){ console.log(up.error); }
-  else{ const {data}=client.storage.from('house-images').getPublicUrl(name); url1=data.publicUrl; }
-  const payload={title:document.getElementById('l_title').value||'House',location:document.getElementById('l_location').value||'PH',price:parseInt(document.getElementById('l_price').value)||0,phone:document.getElementById('l_phone').value,whatsapp:document.getElementById('l_phone').value,type:document.getElementById('l_type').value,description:document.getElementById('l_desc').value,image_url:url1||'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2',payment_ref:document.getElementById('l_ref').value,status:'pending'};
-  const {error}=await client.from('houses').insert([payload]);
+  const cf1 = await compressImage(f1);
+  const cf2 = await compressImage(document.getElementById('f2').files[0]);
+  const img1 = await safeUpload(client, cf1, 'house-images') || await safeUpload(client, cf1, 'listings');
+  const img2 = await safeUpload(client, cf2, 'house-images');
+  const vid = await safeUpload(client, document.getElementById('f3').files[0], 'house-videos');
+  const pay = await safeUpload(client, document.getElementById('fpay').files[0], 'house-images');
+  const payload = {
+   title: document.getElementById('l_title').value||'House in PH',
+   location: document.getElementById('l_location').value||'PH',
+   price: parseInt(document.getElementById('l_price').value)||0,
+   phone: document.getElementById('l_phone').value,
+   whatsapp: document.getElementById('l_phone').value,
+   type: document.getElementById('l_type').value||'2 Bedroom',
+   description: document.getElementById('l_desc').value,
+   image_url: img1||'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2',
+   image2_url: img2, video_url: vid, payment_proof: pay,
+   payment_ref: document.getElementById('l_ref').value||'5000',
+   status: 'pending'
+  };
+  const {error} = await client.from('houses').insert([payload]);
   if(error) throw error;
-  msg.style.color='green'; msg.innerText='✅ SUCCESS! We don receive am!';
-  btn.innerText='✅ Submitted';
-  setTimeout(openTenant,1000);
+  msg.style.color='green'; msg.innerText='✅ SUCCESS! We don receive am! Verification in 24hrs';
+  btn.innerText='✅ Submitted!'; setTimeout(showTenant,1200);
  }catch(err){
-  console.log(err);
-  msg.style.color='red'; msg.innerText='Error: '+err.message+' - Use small photo <2MB';
-  btn.disabled=false; btn.innerText='✅ SUBMIT FOR VERIFICATION';
+  console.log(err); msg.style.color='red'; msg.innerText='Error: '+err.message+' — Try small photo <2MB'; btn.disabled=false; btn.innerText='✅ SUBMIT FOR VERIFICATION';
  }
 }
 loadHouses();
