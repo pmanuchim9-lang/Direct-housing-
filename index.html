@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="color-scheme" content="light only">
+<title>House Direct PH - Direct to Landlord</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{color-scheme:light !important}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,sans-serif}
+html,body{background:#f1f5f9 !important;color:#0f172a !important;overflow-x:hidden}
+body{padding-bottom:24px}
+.topbar{position:sticky;top:0;z-index:1000;background:#0a1931 !important;color:#fff !important;padding:14px 16px 12px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.logo-row{display:flex;align-items:center;gap:10px;font-weight:900;font-size:18px;letter-spacing:.4px;cursor:pointer;width:100%;user-select:none}
+.logo-row span{color:#ffcc00 !important}
+.logo-icon{width:42px;height:42px;background:#fff !important;border-radius:10px;display:flex;align-items:center;justify-content:center;position:relative;border:2.5px solid #ffcc00}
+.logo-icon::before{content:"";position:absolute;top:5px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-bottom:10px solid #0a1931}
+.logo-icon b{margin-top:10px;color:#0a1931 !important;font-size:13px;font-weight:900}
+.tabs{display:flex;gap:10px;width:100%}
+.tab{flex:1;padding:11px;border-radius:24px;font-size:13px;font-weight:800;border:none;cursor:pointer;text-align:center}
+.tab-active{background:#ffcc00 !important;color:#0a1931 !important}
+.tab-inactive{background:#1e293b !important;color:#94a3b8 !important;border:1px solid #334155}
+.hero{background:linear-gradient(135deg,#0a1931 0%,#162e66 45%,#0a1931 100%) !important;color:#fff !important;padding:22px 16px 18px;text-align:center}
+.hero h2{font-size:20px;line-height:1.3;font-weight:800}
+.hero p{font-size:11px;opacity:.82;margin-top:8px}
+.searchContainer{display:flex;justify-content:center;margin-top:16px}
+.aiWrap{width:100%;max-width:380px;background:#fff !important;border-radius:12px;padding:5px 5px 5px 12px;display:flex;gap:6px;align-items:center;border:2px solid #ffcc00;box-shadow:0 10px 28px rgba(0,0,0,.25)}
+.aiWrap input{flex:1;border:none;outline:none;padding:10px 4px;font-size:13px;background:#fff !important;color:#0f172a !important;min-width:0}
+.btn{border:none;border-radius:10px;padding:11px 14px;font-weight:800;cursor:pointer;font-size:12px}
+.btn-y{background:#ffcc00 !important;color:#0a1931 !important}
+.btn-g{background:#16a34a !important;color:#fff !important;width:100%;padding:15px;margin-top:14px;font-size:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;max-width:1120px;margin:0 auto;background:#f1f5f9 !important}
+.card{background:#fff !important;border-radius:16px;overflow:hidden;border:1px solid #e2e8f0;box-shadow:0 4px 14px rgba(0,0,0,.06);position:relative}
+.card img{width:100%;height:148px;object-fit:cover;background:#e2e8f0}
+.card-body{padding:11px;background:#fff !important}
+.badge{background:#dcfce7 !important;color:#166534 !important;font-size:9px;font-weight:800;padding:4px 8px;border-radius:20px;display:inline-block}
+.badge-video{background:#0a1931 !important;color:#ffcc00 !important;margin-left:6px}
+.meta{font-size:11px;color:#64748b !important;margin:4px 0;line-height:1.4}
+.callRow{display:flex;gap:8px;margin-top:8px}
+.call{flex:1;text-align:center;padding:10px 4px;border-radius:8px;font-size:11px;font-weight:800;text-decoration:none}
+.call-green{background:#16a34a !important;color:#fff !important}
+.call-dark{background:#0a1931 !important;color:#ffcc00 !important}
+.formWrap{max-width:920px;margin:0 auto;background:#fff !important;padding:18px 16px 24px;border-radius:0 0 20px 20px;border:1px solid #e2e8f0;border-top:none}
+.payBox{background:linear-gradient(135deg,#fffbeb,#fef3c7) !important;border:2.5px dashed #f59e0b;padding:16px;border-radius:14px;text-align:center;margin:16px 0}
+.input{width:100%;padding:12px 14px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:13px;margin:6px 0;background:#fff !important;color:#0f172a !important}
+.label{font-size:10px;font-weight:800;color:#334155 !important;margin-top:12px;display:block;text-transform:uppercase;letter-spacing:.4px}
+.hidden{display:none !important}
+.sectionTitle{font-size:11px;font-weight:800;color:#0a1931 !important;text-transform:uppercase;margin:18px 0 8px;display:flex;align-items:center;gap:6px}
+.mediaBox{border:1.5px solid #e2e8f0;border-radius:12px;padding:14px;margin-top:10px;background:#f8fafc !important}
+.progressBar{width:100%;height:6px;background:#e2e8f0;border-radius:10px;margin-top:8px;overflow:hidden;display:none}
+.progressBar div{height:100%;background:#0a1931;width:0%;transition:.3s}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+<div class="logo-row" id="logoTrigger"><div class="logo-icon"><b>HD</b></div>HOUSE <span>DIRECT</span> PH</div>
+<div class="tabs">
+<button class="tab tab-active" id="tab-tenant" onclick="showTab('tenant')">Tenants</button>
+<button class="tab tab-inactive" id="tab-landlord" onclick="showTab('landlord')">Landlords</button>
+</div>
+</div>
+
+<div id="view-tenant">
+<div class="hero">
+<h2>Find House - Call Landlord Direct<br>No Agent Fee</h2>
+<p>Verified Listings • 2 Photos + Video • Direct Contact</p>
+<div class="searchContainer">
+<div class="aiWrap"><input id="aiInput" placeholder="Search e.g 2 bed Rumuola..."><button class="btn btn-y" onclick="aiSearch()">Search</button></div>
+</div>
+<div id="aiResult" style="color:#ffcc00;font-size:11px;margin-top:10px;font-weight:600"></div>
+</div>
+<div class="grid" id="propertyGrid"></div>
+</div>
+
+<div id="view-landlord" class="hidden">
+<div class="hero">
+<h2>List Your House - Get Tenants Direct</h2>
+<p>Pay N5k once to 3006692047 • Upload 2 Photos + 1 Video</p>
+</div>
+<div class="formWrap">
+
+<div class="sectionTitle">📧 Your Contact</div>
+<input id="auth_email" class="input" placeholder="Your email">
+<input id="l_name" class="input" placeholder="Your name">
+
+<div class="payBox">
+<h3 style="color:#0a1931;font-size:15px;font-weight:900">💳 PAY N5,000 TO LIST</h3>
+<div style="display:flex;justify-content:center;align-items:center;gap:10px;background:#fff;padding:12px 16px;border-radius:10px;margin:14px auto;max-width:340px;border:1.5px solid #fde68a">
+<b style="font-size:26px;color:#0a1931">3006692047</b>
+<button onclick="copyAcct()" class="btn" style="background:#0a1931 !important;color:#ffcc00 !important;padding:8px 14px;font-size:12px">📋 COPY</button>
+</div>
+<p style="font-size:13px;font-weight:800;color:#0a1931">Moniepoint - TEMPLE M. CHIORLU</p>
+<p id="copyMsg" style="font-size:11px;color:#16a34a;height:18px;margin-top:8px;font-weight:800"></p>
+</div>
+
+<div class="sectionTitle">🏠 House Details</div>
+<label class="label">Phone Tenant Will Call *</label><input id="l_phone" class="input" placeholder="e.g 0803 456 7890">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div><label class="label">Location *</label><input id="l_location" class="input" placeholder="e.g Rumuola, GRA"></div>
+<div><label class="label">Price Per Year *</label><input id="l_price" type="number" class="input" placeholder="e.g 650000"></div>
+</div>
+<label class="label">House Type *</label>
+<select id="l_type" class="input">
+<option value="">Select type</option>
+<option>Land</option>
+<option>Self-Contain</option>
+<option>Single Room</option>
+<option>1 Bedroom</option>
+<option>2 Bedroom</option>
+<option>3 Bedroom</option>
+<option>4 Bedroom</option>
+<option>5 Bedroom</option>
+<option>6 Bedroom</option>
+<option>Mini Flat</option>
+<option>Full House</option>
+<option>Bungalow</option>
+<option>Duplex</option>
+<option>Store</option>
+<option>Office Space</option>
+</select>
+<label class="label">Title *</label><input id="l_title" class="input" placeholder="e.g 2 Bedroom at Rumuola with water">
+<label class="label">Description</label><textarea id="l_desc" class="input" style="height:70px" placeholder="e.g Water, light, fenced, parking..."></textarea>
+
+<div class="sectionTitle">📸 Upload - 2 Photos + 1 Video</div>
+<div class="mediaBox">
+<label class="label" style="margin-top:0">Photo 1 - Front View * (Required)</label>
+<input type="file" id="imgFile1" accept="image/*" class="input">
+<label class="label">Photo 2 - Inside / Back View (Optional but better)</label>
+<input type="file" id="imgFile2" accept="image/*" class="input">
+<label class="label">Video - Walkthrough of House (Max 50MB - Optional but tenants love am)</label>
+<input type="file" id="videoFile" accept="video/*" class="input">
+<p style="font-size:10px;color:#64748b;margin-top:8px;line-height:1.4">💡 Tip: Video make tenant trust you fast. Just 15-30 seconds walk round the house. Show water, kitchen, toilet.</p>
+<div class="progressBar" id="progressBar"><div id="progressInner"></div></div>
+</div>
+
+<label class="label">Payment Reference *</label><input id="l_ref" class="input" placeholder="e.g Amaka - 5000 - 20/05">
+
+<button class="btn btn-g" onclick="submitProperty()">✅ SUBMIT FOR VERIFICATION</button>
+<p id="submitMsg" style="font-size:12px;text-align:center;margin-top:12px;color:#16a34a;font-weight:700;min-height:18px"></p>
+</div>
+</div>
+
+<div id="view-admin" class="hidden">
+<div class="hero" style="padding:18px"><h2>⚙️ CEO Admin Panel</h2><p>Supabase Verification</p></div>
+<div class="formWrap">
+<div id="adminLogin">
+<input id="adminCode" class="input" type="password" placeholder="Enter admin code">
+<button class="btn btn-y" style="width:100%;margin-top:10px;padding:14px" onclick="checkAdmin()">🔓 UNLOCK</button>
+</div>
+<div id="adminPanel" class="hidden">
+<h4 style="font-size:13px">⏳ Pending (<span id="pendingCount">0</span>)</h4><div id="pendingList"></div>
+<h4 style="font-size:13px;margin-top:20px">✅ Live (<span id="approvedCount">0</span>)</h4><div id="approvedList"></div>
+<button class="btn" style="background:#e2e8f0 !important;width:100%;margin-top:20px;color:#0a1931 !important" onclick="showTab('tenant')">← BACK</button>
+</div>
+</div>
+</div>
+
+<script>
+let logoClicks=0;
+const SUPABASE_URL="https://wwjdtorasiqkdtvdszfms.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind3amR0b3Jhc2lxa2R0dmRzZm1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MDg0NjQsImV4cCI6MjEwODA4NDQ2NH0.0a6d2p4x904PCPEtuLFSrStUQBR2G8HVM_cHwotTTB0";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const CEO_CODE="HDCEOTEMPLE30062026";
+let demo=[
+{title:"2-Bedroom at Rumuola",location:"Rumuola",price:650000,type:"2 Bedroom",description:"Water & light",landlord_phone:"08031234567",image_url:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600",image_url2:"",video_url:""},
+{title:"Self-Contain GRA",location:"GRA Phase 2",price:400000,type:"Self-Contain",description:"Tiled, kitchen cabinet",landlord_phone:"08039876543",image_url:"https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600",image_url2:"",video_url:""}
+];
+
+function showTab(t){
+['tenant','landlord','admin'].forEach(x=>{
+document.getElementById('view-'+x).classList.add('hidden');
+let tb=document.getElementById('tab-'+x);
+if(tb){tb.classList.remove('tab-active');tb.classList.add('tab-inactive')}
+});
+document.getElementById('view-'+t).classList.remove('hidden');
+let active=document.getElementById('tab-'+t);
+if(active){active.classList.remove('tab-inactive');active.classList.add('tab-active')}
+if(t==='tenant') loadProperties();
+if(t==='admin') loadAdminSupabase();
+window.scrollTo({top:0,behavior:'smooth'});
+}
+function copyAcct(){navigator.clipboard.writeText("3006692047").then(()=>{let m=document.getElementById('copyMsg');m.innerText="✓ COPIED 3006692047";setTimeout(()=>m.innerText="",3000);});}
+
+async function uploadFile(file, bucket){
+if(!file) return "";
+let name = Date.now()+"_"+Math.random().toString(36).substring(2)+"_"+file.name.replace(/\s+/g,'_');
+let {error} = await supabaseClient.storage.from(bucket).upload(name, file);
+if(error){ console.log(bucket+" upload error", error); return ""; }
+let {data} = supabaseClient.storage.from(bucket).getPublicUrl(name);
+return data.publicUrl;
+}
+
+async function submitProperty(){
+let btnMsg=document.getElementById('submitMsg');
+let pBar=document.getElementById('progressBar');
+let pInner=document.getElementById('progressInner');
+btnMsg.innerText="⏳ Uploading media... Please wait";
+pBar.style.display="block";
+pInner.style.width="20%";
+
+try{
+let file1 = document.getElementById('imgFile1').files[0];
+let file2 = document.getElementById('imgFile2').files[0];
+let videoFile = document.getElementById('videoFile').files[0];
+
+if(!file1){ btnMsg.innerText="⚠️ Photo 1 required - Front view"; pBar.style.display="none"; return; }
+
+let imageUrl1 = await uploadFile(file1, 'house-images');
+pInner.style.width="50%";
+let imageUrl2 = file2 ? await uploadFile(file2, 'house-images') : "";
+pInner.style.width="75%";
+let videoUrl = videoFile ? await uploadFile(videoFile, 'house-videos') : "";
+pInner.style.width="90%";
+
+let prop={
+landlord_name:l_name.value.trim(),
+landlord_email:auth_email.value.trim(),
+landlord_phone:l_phone.value.trim(),
+whatsapp:l_phone.value.trim(),
+title:l_title.value.trim(),
+location:l_location.value.trim(),
+price:parseInt(l_price.value),
+type:l_type.value,
+description:l_desc.value.trim(),
+payment_ref:l_ref.value.trim(),
+status:'pending',
+image_url:imageUrl1,
+image_url2:imageUrl2,
+video_url:videoUrl
+};
+
+if(!prop.landlord_name||!prop.landlord_phone||!prop.title||!prop.location||!prop.price||!prop.payment_ref){
+btnMsg.innerText="⚠️ Fill all * fields"; pBar.style.display="none"; return;
+}
+
+let {error}=await supabaseClient.from('properties').insert([prop]);
+pInner.style.width="100%";
+if(error){ btnMsg.innerText="❌ "+error.message; }
+else{
+btnMsg.innerText="✅ SUCCESS! 2 Photos + Video uploaded. CEO will verify 3006692047 and approve.";
+setTimeout(()=>{ pBar.style.display="none"; showTab('tenant'); },1500);
+}
+}catch(e){
+btnMsg.innerText="❌ Error: "+e.message;
+pBar.style.display="none";
+}
+}
+
+async function loadProperties(){
+let {data}=await supabaseClient.from('properties').select('*').eq('status','approved').order('created_at',{ascending:false});
+let grid=document.getElementById('propertyGrid'); grid.innerHTML='';
+let q=(aiInput.value||'').toLowerCase();
+let all = (data && data.length>0) ? data : demo;
+let filtered = all.filter(p=>{ if(!q) return true; return (p.title+p.location+p.type).toLowerCase().includes(q); });
+if(filtered.length===0){ grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;color:#64748b">No houses found</div>'; return; }
+filtered.forEach(p=>{
+let hasVideo = p.video_url ? `<span class="badge badge-video">🎥 Video</span>` : ``;
+let has2Photos = p.image_url2 ? `<span class="badge" style="background:#fef3c7 !important;color:#92400e !important;margin-left:4px">+1 Photo</span>` : ``;
+let mediaBtn = p.video_url ? `<a href="${p.video_url}" target="_blank" class="call" style="background:#0a1931 !important;color:#ffcc00 !important">🎥 Watch Video</a>` : ``;
+grid.innerHTML+=`<div class="card">
+<div style="position:relative"><img src="${p.image_url}" loading="lazy"><div style="position:absolute;bottom:6px;left:6px;display:flex;gap:4px"><span class="badge">✓ VERIFIED</span>${hasVideo}${has2Photos}</div></div>
+<div class="card-body">
+<h4 style="font-size:13px;margin:6px 0;color:#0a1931">${p.title}</h4>
+<p class="meta">${p.location} • ${p.type} • <b>N${(p.price||0).toLocaleString()}</b></p>
+<div class="callRow"><a href="tel:${p.landlord_phone}" class="call call-green">📞 Call</a><a href="https://wa.me/234${(p.landlord_phone||'').replace(/^0/,'')}" target="_blank" class="call call-dark">WhatsApp</a>${mediaBtn}</div>
+</div></div>`;
+});
+}
+function aiSearch(){ loadProperties(); if(aiInput.value) aiResult.innerText='Results for "'+aiInput.value+'"'; else aiResult.innerText=''; }
+function checkAdmin(){ let entered = adminCode.value.trim().toUpperCase(); if(entered===CEO_CODE){ adminLogin.classList.add('hidden'); adminPanel.classList.remove('hidden'); loadAdminSupabase(); }else alert('Wrong code'); }
+async function loadAdminSupabase(){
+let {data:pending}=await supabaseClient.from('properties').select('*').eq('status','pending').order('created_at',{ascending:false});
+let {data:approved}=await supabaseClient.from('properties').select('*').eq('status','approved').order('created_at',{ascending:false});
+pendingCount.innerText=pending?pending.length:0; approvedCount.innerText=approved?approved.length:0;
+pendingList.innerHTML=pending&&pending.length?pending.map(p=>`<div style="border:1px solid #e2e8f0;padding:10px;border-radius:10px;margin:8px 0;background:#fff"><b>${p.title}</b> - N${p.price}<br><small>${p.landlord_phone} | Ref:${p.payment_ref}</small><br><small>📸 ${p.image_url?'Photo1 ✓':''} ${p.image_url2?'Photo2 ✓':''} ${p.video_url?'Video ✓':''}</small><div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-g" style="flex:1;padding:10px;margin:0" onclick="approveSupabase(${p.id})">Approve</button><button class="btn" style="flex:1;background:#fee2e2 !important;color:#991b1b !important;padding:10px;margin:0" onclick="rejectSupabase(${p.id})">Reject</button></div></div>`).join(''):'<p style="font-size:12px;padding:10px">No pending</p>';
+approvedList.innerHTML=approved?approved.map(p=>`<div style="border:1px solid #e2e8f0;padding:8px;border-radius:8px;margin:6px 0;background:#fff"><b>${p.title}</b> - N${p.price} <button onclick="deleteSupabase(${p.id})" style="float:right;border:none;background:#fee2e2;padding:4px 8px;border-radius:6px">Remove</button><br><small>${p.video_url?'🎥 Video ':''}${p.image_url2?'+Photo2':''}</small></div>`).join(''):'';
+}
+async function approveSupabase(id){ await supabaseClient.from('properties').update({status:'approved'}).eq('id',id); loadAdminSupabase(); loadProperties(); }
+async function rejectSupabase(id){ await supabaseClient.from('properties').delete().eq('id',id); loadAdminSupabase(); }
+async function deleteSupabase(id){ await supabaseClient.from('properties').delete().eq('id',id); loadAdminSupabase(); loadProperties(); }
+document.getElementById('logoTrigger').addEventListener('click',()=>{ logoClicks++; if(logoClicks>=5){ showTab('admin'); logoClicks=0 } setTimeout(()=>{ if(logoClicks>0&&logoClicks<5) logoClicks=0 },2500); });
+aiInput.addEventListener('keypress',(e)=>{ if(e.key==='Enter') aiSearch() });
+loadProperties();
+</script>
+</body>
+</html>
