@@ -13,7 +13,7 @@ body{background:#F8F7F3;font-family:Inter,Arial;color:#111}
 .tab{padding:10px 20px;border-radius:99px;border:none;font-weight:800;cursor:pointer}
 .active{background:#FFCC00;color:#0A1931} .inactive{background:#1E3A5F;color:#fff}
 .hero{background:linear-gradient(135deg,#0A1931 0%,#123060 100%);color:#fff;padding:32px 16px;text-align:center}
-.hero h1{font-size:24px} .hero p{opacity:.8;margin-top:8px;font-size:14px}
+.hero h1{font-size:22px} .hero p{opacity:.8;margin-top:8px;font-size:13px}
 .searchbar{padding:12px;background:#fff;border-bottom:1px solid #eee;position:sticky;top:60px;z-index:90}
 .search{width:100%;padding:14px;border:1px solid #ddd;border-radius:12px;font-size:16px}
 .grid{padding:14px;display:flex;flex-direction:column;gap:16px;max-width:600px;margin:0 auto}
@@ -27,9 +27,10 @@ body{background:#F8F7F3;font-family:Inter,Arial;color:#111}
 .page{display:none;padding:14px} .formbox{background:#fff;border-radius:24px;padding:20px;max-width:560px;margin:0 auto;box-shadow:0 12px 32px rgba(0,0,0,.08);border:1px solid #eee}
 .pay{background:#FFF9D6;border:2px dashed #FFCC00;border-radius:16px;padding:20px;text-align:center;margin:16px 0}
 .acct{font-size:30px;font-weight:900;color:#0A1931;letter-spacing:1px}
-.step{background:#0A1931;color:#FFCC00;font-size:11px;font-weight:900;padding:6px 12px;border-radius:99px;display:inline-block;margin:22px 0 10px;letter-spacing:.5px}
-.in{width:100%;padding:15px;border:1.5px solid #ddd;border-radius:12px;margin-top:10px;font-size:16px;background:#fff}
-.fbox{border:1.5px dashed #bbb;background:#FAFAF8;border-radius:12px;padding:12px;margin-top:10px;font-size:14px;font-weight:600}
+.step{background:#0A1931;color:#FFCC00;font-size:11px;font-weight:900;padding:6px 12px;border-radius:99px;display:inline-block;margin:22px 0 12px;letter-spacing:.5px}
+.label{display:block;font-weight:900;font-size:11px;margin:16px 0 6px;color:#0A1931;letter-spacing:.6px;text-transform:uppercase}
+.in{width:100%;padding:15px;border:1.5px solid #ddd;border-radius:12px;font-size:16px;background:#fff}
+.fbox{border:1.5px dashed #bbb;background:#FAFAF8;border-radius:12px;padding:12px;margin-top:10px;font-size:13px;font-weight:700}
 .fbox input{margin-top:8px;width:100%}
 .submit{width:100%;padding:18px;background:#FFCC00;color:#0A1931;border:none;border-radius:14px;font-weight:900;font-size:18px;margin-top:20px;cursor:pointer;box-shadow:0 6px 0 #E6B800}
 .msg{text-align:center;font-weight:800;margin-top:14px;min-height:20px}
@@ -49,11 +50,11 @@ body{background:#F8F7F3;font-family:Inter,Arial;color:#111}
 <!-- TENANTS -->
 <div id="p-tenant">
 <div class="hero"><h1>Find House Direct — No Agent Fee</h1><p>Verified houses in Port Harcourt — Call landlord direct</p></div>
-<div class="searchbar"><input id="s" class="search" placeholder="Search Rumuola, 2 Bedroom, 400k..." oninput="filter()"></div>
+<div class="searchbar"><input id="s" class="search" placeholder="Search location..." oninput="filter()"></div>
 <div class="grid" id="g">Loading verified houses...</div>
 </div>
 
-<!-- LANDLORDS - NEAT & IN ORDER -->
+<!-- LANDLORDS - FINAL EMPTY BARS -->
 <div id="p-landlord" class="page">
 <div class="formbox">
 <h2 style="text-align:center">List Your House</h2>
@@ -68,42 +69,65 @@ body{background:#F8F7F3;font-family:Inter,Arial;color:#111}
 </div>
 
 <div class="step">STEP 1 — HOUSE DETAILS</div>
-<input class="in" id="l_title" placeholder="Title e.g 2 Bedroom Flat in Rumuokoro">
-<input class="in" id="l_location" placeholder="Location e.g Rumuola, PH">
+
+<label class="label">HOUSE TITLE</label>
+<input class="in" id="l_title" placeholder="">
+
+<label class="label">HOUSE LOCATION</label>
+<input class="in" id="l_location" placeholder="">
+
 <div style="display:flex;gap:10px">
-<input class="in" id="l_price" type="number" placeholder="Price e.g 500000">
-<input class="in" id="l_type" placeholder="Type e.g 2 Bedroom">
+<div style="flex:1">
+<label class="label">HOUSE PRICE (₦)</label>
+<input class="in" id="l_price" type="number" placeholder="">
+</div>
+<div style="flex:1">
+<label class="label">HOUSE TYPE</label>
+<input class="in" id="l_type" placeholder="">
+</div>
 </div>
 
-<div class="step">STEP 2 — YOUR CONTACT</div>
-<input class="in" id="l_phone" placeholder="WhatsApp Number e.g 08035988000">
-<textarea class="in" id="l_desc" rows="3" placeholder="Describe: Water? Light? Fenced? Tiles?"></textarea>
+<div class="step">STEP 2 — YOUR CONTACT DETAILS</div>
 
-<div class="step">STEP 3 — 5 PHOTOS (NO VIDEO PLEASE)</div>
-<div class="fbox">📸 Photo 1 * — Outside / Front View <input type="file" id="f1" accept="image/*"></div>
-<div class="fbox">📸 Photo 2 * — Parlour / Sitting Room <input type="file" id="f2" accept="image/*"></div>
-<div class="fbox">📸 Photo 3 * — Bedroom <input type="file" id="f3" accept="image/*"></div>
+<label class="label">YOUR FULL NAME</label>
+<input class="in" id="l_name" placeholder="">
+
+<label class="label">YOUR EMAIL</label>
+<input class="in" id="l_email" type="email" placeholder="">
+
+<label class="label">PHONE NUMBER</label>
+<input class="in" id="l_phone" placeholder="">
+
+<label class="label">HOUSE DESCRIPTION</label>
+<textarea class="in" id="l_desc" rows="3" placeholder=""></textarea>
+
+<div class="step">STEP 3 — 5 PHOTOS (NO VIDEO)</div>
+<div class="fbox">📸 Photo 1 — Outside / Front View <input type="file" id="f1" accept="image/*"></div>
+<div class="fbox">📸 Photo 2 — Parlour / Sitting Room <input type="file" id="f2" accept="image/*"></div>
+<div class="fbox">📸 Photo 3 — Bedroom <input type="file" id="f3" accept="image/*"></div>
 <div class="fbox">📸 Photo 4 — Kitchen (optional) <input type="file" id="f4" accept="image/*"></div>
 <div class="fbox">📸 Photo 5 — Toilet / Bathroom (optional) <input type="file" id="f5" accept="image/*"></div>
 
 <div class="step">STEP 4 — PAYMENT PROOF</div>
-<div class="fbox">🧾 Payment Proof * — Screenshot of ₦5,000 to 6562286352 <input type="file" id="fpay" accept="image/*"></div>
-<input class="in" id="l_ref" placeholder="Payment Reference e.g Temple 5k 10am">
+<div class="fbox">🧾 Payment Proof — Screenshot of ₦5,000 to 6562286352 <input type="file" id="fpay" accept="image/*"></div>
 
-<button class="submit" id="btnSubmit" onclick="submitHouse()">✅ SUBMIT FOR VERIFICATION</button>
+<label class="label">PAYMENT REFERENCE</label>
+<input class="in" id="l_ref" placeholder="">
+
+<button class="submit" id="btnSubmit" onclick="submitHouse()">SUBMIT LISTING</button>
 <div id="msg" class="msg"></div>
 <p style="text-align:center;color:#999;font-size:11px;margin-top:10px">Fake info = No refund. We verify payment 2-12hrs.</p>
 </div>
 </div>
 
-<!-- ADMIN HIDDEN -->
+<!-- ADMIN HIDDEN - 5 TAPS ON LOGO -->
 <div id="p-admin" class="page">
 <div class="formbox">
 <div class="admin">
 <h2>🔒 ADMIN PANEL</h2>
 <p style="opacity:.7;font-size:13px;margin-top:6px">Hidden — 5 taps on logo to open</p>
 <div id="aLogin">
-<input class="in" id="aCode" type="password" placeholder="Enter Admin Code" style="color:#111">
+<input class="in" id="aCode" type="password" placeholder="" style="color:#111">
 <button class="submit" style="margin-top:12px" onclick="openAdmin()">UNLOCK ADMIN</button>
 </div>
 <div id="aContent" style="display:none">
@@ -122,10 +146,9 @@ body{background:#F8F7F3;font-family:Inter,Arial;color:#111}
 // PASTE YOUR ANON KEY HERE - ONLY ONE PLACE!
 // ============================================
 const SUPA_URL = 'https://wwjdtorasiqkdtvdsfms.supabase.co';
-
-// 👇👇👇 PASTE YOUR ANON PUBLIC KEY INSIDE THE QUOTES BELOW 👇👇👇
+// 👇👇 PASTE YOUR ANON PUBLIC KEY INSIDE THE QUOTES BELOW 👇👇
 const SUPA_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind3amR0b3Jhc2lxa2R0dmRzZm1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MDg0NjQsImV4cCI6MjEwODA4NDQ2NH0.0a6d2p4x904PCPEtuLFSrStUQBR2G8HVM_cHwotTTB0'
-const ADMIN_SECRET = '6562'; // Change your admin code here
+const ADMIN_SECRET = '6562';
 
 function showP(p){
  document.getElementById('p-tenant').style.display = p==='tenant'?'block':'none';
@@ -142,7 +165,7 @@ document.getElementById('logoTap').addEventListener('click',()=>{
  if(taps>=5){taps=0; showP('admin');}
 });
 function getClient(){
- if(SUPA_ANON_KEY.includes('PASTE') || SUPA_ANON_KEY.length < 20) return null;
+ if(SUPA_ANON_KEY.includes('PASTE') || SUPA_ANON_KEY.length < 40) return null;
  try{return supabase.createClient(SUPA_URL,SUPA_ANON_KEY);}catch(e){return null;}
 }
 function openAdmin(){
@@ -160,7 +183,7 @@ async function loadAdmin(){
  if(!data.length){grid.innerHTML='No houses yet'; return;}
  grid.innerHTML='';
  data.forEach(h=>{
-  grid.innerHTML+=`<div style="background:#fff;color:#111;border-radius:14px;padding:12px;margin:10px 0"><img src="${h.image_url||''}" style="width:100%;height:150px;object-fit:cover;border-radius:10px;background:#eee"><div style="margin-top:8px"><b>${h.title||''}</b> • ${h.location||''}<br>₦${Number(h.price||0).toLocaleString()} • ${h.phone||''}<br>Ref: ${h.payment_ref||''} • <b>${h.status||'pending'}</b><br><div style="margin-top:8px"><button onclick="upd('${h.id}','verified')" style="background:#25D366;color:#fff;border:none;padding:8px 12px;border-radius:8px;font-weight:800">Approve</button> <button onclick="upd('${h.id}','rejected')" style="background:#ff3b3b;color:#fff;border:none;padding:8px 12px;border-radius:8px;font-weight:800">Reject</button> <button onclick="delH('${h.id}')" style="background:#111;color:#fff;border:none;padding:8px 12px;border-radius:8px;font-weight:800">Delete</button></div></div></div>`;
+  grid.innerHTML+=`<div style="background:#fff;color:#111;border-radius:14px;padding:12px;margin:10px 0"><img src="${h.image_url||''}" style="width:100%;height:150px;object-fit:cover;border-radius:10px;background:#eee"><div style="margin-top:8px"><b>${h.title||''}</b> • ${h.location||''}<br>₦${Number(h.price||0).toLocaleString()} • ${h.phone||''} • ${h.full_name||''}<br>Ref: ${h.payment_ref||''} • <b>${h.status||'pending'}</b><br><div style="margin-top:8px"><button onclick="upd('${h.id}','verified')" style="background:#25D366;color:#fff;border:none;padding:8px 12px;border-radius:8px;font-weight:800">Approve</button> <button onclick="upd('${h.id}','rejected')" style="background:#ff3b3b;color:#fff;border:none;padding:8px 12px;border-radius:8px;font-weight:800">Reject</button> <button onclick="delH('${h.id}')" style="background:#111;color:#fff;border:none;padding:8px 12px;border-radius:8px;font-weight:800">Delete</button></div></div></div>`;
  });
 }
 async function upd(id,s){const c=getClient(); const {error}=await c.from('houses').update({status:s}).eq('id',id); if(error) alert(error.message); else loadAdmin();}
@@ -168,12 +191,12 @@ async function delH(id){if(!confirm('Delete?')) return; const c=getClient(); con
 function comp(f){return new Promise(r=>{if(!f) return r(null); const rd=new FileReader(); rd.onload=e=>{const img=new Image(); img.onload=()=>{const cv=document.createElement('canvas'); let w=img.width,h=img.height; const mx=900; if(w>mx){h=mx/w*h; w=mx;} cv.width=w; cv.height=h; cv.getContext('2d').drawImage(img,0,0,w,h); cv.toBlob(b=>r(b),'image/jpeg',0.7);}; img.src=e.target.result;}; rd.readAsDataURL(f);});}
 async function loadHouses(){
  const g=document.getElementById('g'); g.innerHTML='Loading verified houses...';
- try{const c=getClient(); if(!c){g.innerHTML='<div class="card"><div class="body">⚠️ Admin: Paste anon key to load real houses. Go Settings > API > anon public</div></div>'; return;}
+ try{const c=getClient(); if(!c){g.innerHTML='<div class="card"><div class="body">⚠️ Admin: Paste anon key to load real houses.</div></div>'; return;}
   const {data}=await c.from('houses').select('*').eq('status','verified').order('created_at',{ascending:false}).limit(30);
   if(!data||!data.length){g.innerHTML='<div class="card"><div class="body">No verified houses yet — Be first to list!</div></div>'; return;}
   g.innerHTML='';
   data.forEach(h=>{
-   const wa=(h.whatsapp||h.phone||'').toString().replace(/[^0-9]/g,'');
+   const wa=(h.phone||'').toString().replace(/[^0-9]/g,'');
    g.innerHTML+=`<div class="card"><img src="${h.image_url||'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2'}"><div class="body"><div class="t">${h.title||'House'}</div><div class="m">${h.location||'PH'} • ${h.type||'House'}</div><div class="pr">₦${Number(h.price||0).toLocaleString()} / year</div><span class="badge">✅ Verified</span><div class="btns"><a class="cb" href="tel:${h.phone||''}">📞 Call</a><a class="wb" href="https://wa.me/${wa}">WhatsApp</a></div></div></div>`;
   });
  }catch(e){g.innerHTML='Error: '+e.message;}
@@ -184,16 +207,16 @@ async function submitHouse(){
  const f1=document.getElementById('f1').files[0], f2=document.getElementById('f2').files[0], f3=document.getElementById('f3').files[0], fpay=document.getElementById('fpay').files[0];
  if(!f1||!f2||!f3){msg.style.color='red'; msg.innerText='❌ Please add Photo 1,2,3'; return;}
  if(!fpay){msg.style.color='red'; msg.innerText='❌ Please add Payment Proof'; return;}
- const c=getClient(); if(!c){msg.style.color='red'; msg.innerText='⚠️ Paste anon key! See top of code — PASTE_YOUR_ANON_KEY_HERE'; return;}
- btn.disabled=true; btn.innerText='⏳ Uploading 5 photos... wait 30sec'; msg.style.color='#0A1931'; msg.innerText='Compressing for phone... don\'t close page';
+ const c=getClient(); if(!c){msg.style.color='red'; msg.innerText='⚠️ Paste anon key! See top — PASTE_YOUR_ANON_KEY_HERE'; return;}
+ btn.disabled=true; btn.innerText='⏳ Uploading... wait 30sec'; msg.style.color='#0A1931'; msg.innerText='Don\'t close page...';
  try{
   const cf1=await comp(f1), cf2=await comp(f2), cf3=await comp(f3), cf4=await comp(document.getElementById('f4').files[0]), cf5=await comp(document.getElementById('f5').files[0]), cfpay=await comp(fpay);
   const up=async b=>{if(!b) return null; const name=Date.now()+'_'+Math.random().toString(36).slice(2)+'.jpg'; const {error}=await c.storage.from('house-images').upload(name,b,{contentType:'image/jpeg'}); if(error) throw error; const {data}=c.storage.from('house-images').getPublicUrl(name); return data.publicUrl;};
   const u1=await up(cf1), u2=await up(cf2), u3=await up(cf3), u4=await up(cf4), u5=await up(cf5), upay=await up(cfpay);
-  const payload={title:document.getElementById('l_title').value||'House',location:document.getElementById('l_location').value||'PH',price:parseInt(document.getElementById('l_price').value)||0,type:document.getElementById('l_type').value||'House',phone:document.getElementById('l_phone').value,whatsapp:document.getElementById('l_phone').value,description:document.getElementById('l_desc').value,payment_ref:document.getElementById('l_ref').value,image_url:u1,image2_url:u2,image3_url:u3,image4_url:u4,image5_url:u5,payment_proof:upay,status:'pending'};
+  const payload={title:document.getElementById('l_title').value||'House',location:document.getElementById('l_location').value||'PH',price:parseInt(document.getElementById('l_price').value)||0,type:document.getElementById('l_type').value||'House',full_name:document.getElementById('l_name').value,email:document.getElementById('l_email').value,phone:document.getElementById('l_phone').value,whatsapp:document.getElementById('l_phone').value,description:document.getElementById('l_desc').value,payment_ref:document.getElementById('l_ref').value,image_url:u1,image2_url:u2,image3_url:u3,image4_url:u4,image5_url:u5,payment_proof:upay,status:'pending'};
   const {error}=await c.from('houses').insert([payload]); if(error) throw error;
-  msg.style.color='green'; msg.innerText='✅ SUCCESS! 5 photos uploaded! Pending verification — 2-12hrs'; btn.innerText='✅ DONE!'; setTimeout(()=>showP('tenant'),1500);
- }catch(err){msg.style.color='red'; msg.innerText='Error: '+err.message; btn.disabled=false; btn.innerText='✅ SUBMIT FOR VERIFICATION';}
+  msg.style.color='green'; msg.innerText='✅ SUCCESS! Pending verification — 2-12hrs'; btn.innerText='✅ DONE!'; setTimeout(()=>showP('tenant'),1500);
+ }catch(err){msg.style.color='red'; msg.innerText='Error: '+err.message; btn.disabled=false; btn.innerText='SUBMIT LISTING';}
 }
 loadHouses();
 </script>
